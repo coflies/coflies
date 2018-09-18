@@ -1,14 +1,33 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	coflies "github.com/coflies/coflies/cmd"
+)
 
 func main() {
 	// TODO agruments parsing
-	// TODO project initialize
-	// TODO compile if necessary
-	// TODO run test suites
-	// TODO handling output and return
-	printUsage()
+	// TODO    - language initialize
+	// TODO    - project initialize
+	// TODO    - code data initialize
+	// TODO    - test data initialize
+	// TODO configuration initialize
+	config := coflies.Configuration{
+		coflies.LanguageProperties{"golang", "1.11"},
+		coflies.ProjectProperties{},
+		coflies.CodeData{},
+		coflies.CodeData{},
+		coflies.TestData{},
+	}
+
+	// TODO runner initialize
+	runner, _ := coflies.MakeRunner(config)
+	runner.Start()
+	result, _ := runner.Wait()
+
+	// hahaha
+	fmt.Println(result)
 }
 
 func printUsage() {
