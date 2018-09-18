@@ -2,6 +2,9 @@ NAME=coflies
 
 all: vet build
 
+check:
+	@scripts/check.sh
+
 vet:
 	go vet .
 
@@ -13,4 +16,5 @@ format:
 .PHONY:
 	all \
 	vet \
+	check \
 	build
