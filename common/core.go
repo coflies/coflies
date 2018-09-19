@@ -1,6 +1,4 @@
-package coflies
-
-import "errors"
+package common
 
 // Runner The main entry point of the cmd
 type Runner interface {
@@ -18,7 +16,7 @@ type Configuration struct {
 	// Language - this will be set as default in each specific docker container
 	Lang LanguageProperties
 	// Project - this will be set as default in each specific docker container
-	Project ProjectProperties
+	Project ProjectData
 	// User input
 	Implementation CodeData
 	// User input
@@ -35,39 +33,14 @@ type LanguageProperties struct {
 	Version string
 }
 
-// ProjectProperties ...
-type ProjectProperties struct{}
+// ProjectData store properties of the coflies project
+type ProjectData struct{}
 
-// CodeData properties
+// CodeData store code data of the coflies project
 type CodeData struct{}
 
-// TestData properties
+// TestData store test data of the coflies project
 type TestData struct{}
 
+// ResultData store result of the coflies project
 type ResultData struct{}
-
-// MakeRunner Base on configuration return a specific runner
-func MakeRunner(conf Configuration) (Runner, error) {
-	// TODO configuration embedded into runner when initialization
-	return new(golangRunner), nil
-}
-
-// Sample for Runner
-type golangRunner struct {
-}
-
-func (r golangRunner) Start() error {
-	return errors.New("Error")
-}
-
-func (r golangRunner) Wait() (ResultData, error) {
-	return ResultData{}, nil
-}
-
-func (r golangRunner) Cancel() bool {
-	return true
-}
-
-func (r golangRunner) IsRunning() bool {
-	return false
-}

@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 
-	coflies "github.com/coflies/coflies/cmd"
+	cmd "github.com/coflies/coflies/cmd"
+	"github.com/coflies/coflies/runners"
 )
 
 func main() {
@@ -13,16 +14,16 @@ func main() {
 	// TODO    - code data initialize
 	// TODO    - test data initialize
 	// TODO configuration initialize
-	config := coflies.Configuration{
-		coflies.LanguageProperties{"golang", "1.11"},
-		coflies.ProjectProperties{},
-		coflies.CodeData{},
-		coflies.CodeData{},
-		coflies.TestData{},
+	config := cmd.Configuration{
+		cmd.LanguageProperties{"golang", "1.11"},
+		cmd.ProjectProperties{},
+		cmd.CodeData{},
+		cmd.CodeData{},
+		cmd.TestData{},
 	}
 
 	// TODO runner initialize
-	runner, _ := coflies.MakeRunner(config)
+	runner, _ := MakeRunner(config)
 	runner.Start()
 	result, _ := runner.Wait()
 
@@ -33,4 +34,11 @@ func main() {
 func printUsage() {
 	fmt.Println(`Code Sandbox CLI Runner
 	Usage: coflies`)
+}
+
+// MakeRunner Base on configuration return a specific runner
+func MakeRunner(conf cmd.Configuration) (cmd.Runner, error) {
+	// TODO configuration embedded into runner when initialization
+	// TODO create runner base on conf.Lang
+	return new(runners.Golang), nil
 }
