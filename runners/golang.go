@@ -2,8 +2,10 @@ package runners
 
 import (
 	"bytes"
+	"context"
 	"io"
 	"os/exec"
+	"time"
 
 	common "github.com/coflies/coflies/common"
 	log "github.com/sirupsen/logrus"
@@ -17,6 +19,14 @@ type Golang struct {
 	Cmd            *exec.Cmd
 }
 
+func (r *Golang) initOutputBuffers(stdout io.ReadCloser, stderr io.ReadCloser) {
+	r.StandardOutput = new(bytes.Buffer)
+	r.StandardOutput.ReadFrom(stdout)
+
+	r.ErrorOutput = new(bytes.Buffer)
+	r.ErrorOutput.ReadFrom(stderr)
+}
+
 // Start the runner
 func (r *Golang) Start() error {
 	log.Info("Starting the golang runner")
@@ -24,8 +34,11 @@ func (r *Golang) Start() error {
 	// TODO generate/update implement code base on CodeData
 	// TODO generate/update test code base on CodeData
 	// TODO prepare/loading test data base on TestData
-	// TODO run go test and getting output
-	r.Cmd = exec.Command("go", "test")
+	// TODO run go test with cancel timeout and getting output
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Millisecond)
+	defer cancel()
+
+	r.Cmd = exec.CommandContext(ctx, "go", "test")
 	stdout, stderr, err := wireOutput(r.Cmd)
 	if err != nil {
 		log.Fatal(err)
@@ -59,11 +72,6 @@ func (r *Golang) Wait() (common.ResultData, error) {
 	return common.ResultData{}, nil
 }
 
-// Cancel runner if it is runnint
-func (r Golang) Cancel() bool {
-	return true
-}
-
 // IsRunning check runner running or not
 func (r Golang) IsRunning() bool {
 	return false
@@ -80,12 +88,4 @@ func wireOutput(cmd *exec.Cmd) (io.ReadCloser, io.ReadCloser, error) {
 	}
 
 	return stdout, stderr, nil
-}
-
-func (r *Golang) initOutputBuffers(stdout io.ReadCloser, stderr io.ReadCloser) {
-	r.StandardOutput = new(bytes.Buffer)
-	r.StandardOutput.ReadFrom(stdout)
-
-	r.ErrorOutput = new(bytes.Buffer)
-	r.ErrorOutput.ReadFrom(stderr)
 }

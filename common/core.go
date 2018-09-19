@@ -5,8 +5,6 @@ type Runner interface {
 	Start() error
 	// Wait util it's done
 	Wait() (ResultData, error)
-	// Cancel/kill process if running
-	Cancel() bool
 	// Verify process is running or not
 	IsRunning() bool
 }
