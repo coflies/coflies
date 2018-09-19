@@ -14,7 +14,7 @@ type Runner interface {
 // Configuration properties needed for running
 type Configuration struct {
 	// Language - this will be set as default in each specific docker container
-	Lang LanguageProperties
+	Lang LanguageData
 	// Project - this will be set as default in each specific docker container
 	Project ProjectData
 	// User input
@@ -25,8 +25,8 @@ type Configuration struct {
 	TestData TestData
 }
 
-// LanguageProperties ...
-type LanguageProperties struct {
+// LanguageData ...
+type LanguageData struct {
 	// Standard name of language. Ex: java, c, c++, golang, kotlin, python2, python3
 	Name string
 	// Language Implementation Version
