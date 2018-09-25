@@ -1,19 +1,19 @@
 ### TODO:
 
 1. Modules
-- [ ] abstract project template/structure
-- [ ] abstract code compiler
-- [ ] abstract result handler (stdout/stderr)
+- [ ] abstract project template/structure **-(WIP)-**
+- [ ] abstract code compiler **-(WIP)-**
+- [ ] abstract result handler (stdout/stderr) **-(WIP)-**
 
-- [ ] code runner
+- [ ] code runner **-(WIP)-**
 - [ ] entry cli
 - [ ] entry http/2 server
 
 - [ ] docker scripts and the runner **-(WIP)-**
     
     the runner will be installed inside each docker instance (that mean whenever having change in runner), we must
-  - build runner on local
-  - update ancestor dockerfile for copy runner binary into it
+  - ~build runner on local~
+  - ~update ancestor dockerfile for copy runner binary into it~
   - rebuild and push all dockerfile (ancestor must be the first)
 
 - [ ] the project templates **-(WIP)-**
@@ -24,7 +24,7 @@
 
 2. Development
 
-  1. Build Docker images
+  1. Build ancestor with coflies built by previous image of runner
   
 ```bash
 $./build.sh
