@@ -17,4 +17,5 @@ RUN sed -i -e "s/bin\/ash/bin\/bash/" /etc/passwd
 # set default home folder
 # use coflies user
 # copy coflies runner into docker
+COPY coflies /usr/local/bin
 
