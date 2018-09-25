@@ -1,0 +1,1 @@
+SRC_DIR=$PWD DST_DIR=/go/src/github.com/coflies/coflies make build-in-dock

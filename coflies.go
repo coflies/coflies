@@ -16,11 +16,11 @@ func main() {
 	// TODO    - test data initialize
 	// TODO configuration initialize
 	config := common.Configuration{
-		common.LanguageData{"golang", "1.11"},
-		common.ProjectData{},
-		common.CodeData{},
-		common.CodeData{},
-		common.TestData{},
+		Lang:           common.LanguageData{Name: "golang", Version: "1.11"},
+		Project:        common.ProjectData{},
+		Implementation: common.CodeData{},
+		Testing:        common.CodeData{},
+		TestData:       common.TestData{},
 	}
 
 	// TODO runner initialize

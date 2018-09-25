@@ -21,7 +21,21 @@
     the project templates will be differented depended on languages
   - templates
   - code implementation the abstract project generator (so that runner will call later)
- 
+
+2. Development
+
+  1. Build Docker images
+  
+```bash
+$./build.sh
+```
+
+  2. Build coflies on local machine
+
+```bash
+$make all
+```
+
 NOTE: We need it as simple as possible
 
 NOTE 02: When prototyping I put lot of thing together - We need to break them out into other folders/files when impl
