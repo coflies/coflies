@@ -2,13 +2,27 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	common "github.com/coflies/coflies/common"
 	"github.com/coflies/coflies/runners"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
+	// TODO additional HTTP server instead of cmd mode
+	// // TODO use https/2 receive/return output
+	// defer func() {
+	// 	log.Info("Coflies shutdown.")
+	// }()
+
+	// log.Info("Starting Coflies server")
+
+	// // TODO query available languages on this host
+	// log.Info("Querying available languages")
+
+	// // TODO getting languages and runners on ex-server if neccessary.
+
+	//
 	// TODO agruments parsing
 	// TODO    - language initialize
 	// TODO    - project initialize
