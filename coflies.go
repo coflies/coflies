@@ -3,12 +3,15 @@ package main
 import (
 	"fmt"
 
+	"github.com/coflies/coflies/cmd"
+
 	common "github.com/coflies/coflies/common"
 	"github.com/coflies/coflies/runners"
 	log "github.com/sirupsen/logrus"
 )
 
 func main() {
+	cmd.Execute()
 	// TODO additional HTTP server instead of cmd mode
 	// // TODO use https/2 receive/return output
 	// defer func() {
