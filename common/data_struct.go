@@ -19,7 +19,7 @@ type LanguageData struct {
 	// Execution name of exec binary. Ex: java
 	ExecName string
 	// Compile name of compile binary. Ex: javac
-	CompileName string
+	CompilerName string
 	// Type: compiler (need compile then run) | interpreter (don't need compile)
 	Type LanguageType
 }

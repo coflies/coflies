@@ -47,6 +47,7 @@ var runCmd = &cobra.Command{
 			codeRunner, _ := runners.MakeRunner(config.Lang)
 			fmt.Println("  - preparing language framework IF neccessary...")
 			fmt.Println("    -- download if not existed")
+			fmt.Println("        download: " + config.Lang.DownloadLink(gi.GoOS, gi.Platform, "tar.gz"))
 			fmt.Println("      --- extract if downloaded")
 			fmt.Println("      --- configure language")
 			fmt.Println("  - preparing workspace ")
