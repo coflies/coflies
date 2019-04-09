@@ -37,14 +37,15 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	runnerCmd.Flags().StringVar(
+	runnerCmd.PersistentFlags().StringVar(
 		&cfgFile,
 		"config",
 		"",
-		"config file (default is $HOME/.coflies.yaml",
+		"config file (default is $HOME/.coflies/config.yaml",
 	)
-
 	runnerCmd.PersistentFlags().BoolVarP(&development, "development", "d", false, "Enable development mode. Default is false")
+	viper.BindPFlag("development", runnerCmd.PersistentFlags().Lookup("development"))
+	viper.SetDefault("development", false)
 }
 
 func initConfig() {
@@ -56,12 +57,13 @@ func initConfig() {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".coflies")
+		fmt.Println("Config path: " + home + "/.coflies")
+		viper.AddConfigPath(home + "/.coflies")
+		viper.SetConfigName("config")
 	}
 	viper.AutomaticEnv()
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file: ", viper.ConfigFileUsed())
+		fmt.Println("development: ", viper.GetBool("development"))
 	}
 }

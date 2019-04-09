@@ -7,7 +7,6 @@ import (
 
 	common "github.com/coflies/coflies/common"
 	"github.com/coflies/coflies/runners"
-	log "github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -32,26 +31,26 @@ func main() {
 	// TODO    - code data initialize
 	// TODO    - test data initialize
 	// TODO configuration initialize
-	config := common.Configuration{
-		Lang:           common.LanguageData{Name: "golang", Version: "1.11"},
-		Project:        common.ProjectData{},
-		Implementation: common.CodeData{},
-		Testing:        common.CodeData{},
-		TestData:       common.TestData{},
-	}
+	// config := common.Configuration{
+	// 	Lang:           common.LanguageData{Name: "golang", Version: "1.11"},
+	// 	Project:        common.ProjectData{},
+	// 	Implementation: common.CodeData{},
+	// 	Testing:        common.CodeData{},
+	// 	TestData:       common.TestData{},
+	// }
 
 	// TODO runner initialize
-	runner, _ := MakeRunner(config)
-	runner.Start()
-	result, err := runner.Wait()
-	if err != nil {
-		log.Fatal(err)
-		fmt.Println("Runner error. Details: ", err.Error())
-		return
-	}
+	// runner, _ := MakeRunner(config)
+	// runner.Start()
+	// result, err := runner.Wait()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// 	fmt.Println("Runner error. Details: ", err.Error())
+	// 	return
+	// }
 
 	// hahaha
-	fmt.Println(result)
+	// fmt.Println(result)
 }
 
 func printUsage() {
