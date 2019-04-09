@@ -8,7 +8,7 @@
 - [ ] code runner **-(WIP)-**
 - [ ] entry cli
 - [ ] entry http/2 server
-- [ ] entry ipfs-pub-sub client/server for sharing peer-servers resources
+- [ ] entry ipfs-pub-sub client/server for sharing peer-servers resources (https://github.com/ipfs/go-ipfs)
 
 - [ ] docker scripts and the runner **-(WIP)-**
     
