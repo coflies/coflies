@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/coflies/coflies/cmd"
 
 	common "github.com/coflies/coflies/common"
@@ -53,10 +51,10 @@ func main() {
 	// fmt.Println(result)
 }
 
-func printUsage() {
-	fmt.Println(`Code Sandbox CLI Runner
-	Usage: coflies`)
-}
+// func printUsage() {
+// 	fmt.Println(`Code Sandbox CLI Runner
+// 	Usage: coflies`)
+// }
 
 // MakeRunner Base on configuration return a specific runner
 func MakeRunner(conf common.Configuration) (common.Runner, error) {
