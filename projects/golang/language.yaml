@@ -1,0 +1,5 @@
+information:
+  - version: 1.11.8
+    compiler-name: go
+  - version: 1.12.1
+    compiler-name: go
