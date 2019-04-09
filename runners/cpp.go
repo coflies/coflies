@@ -9,12 +9,12 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type Golang struct {
+type Cpp struct {
 	instance common.Runner
 	// many more
 }
 
-func (r Golang) initOutputBuffers(stdout io.ReadCloser, stderr io.ReadCloser) {
+func (r *Cpp) initOutputBuffers(stdout io.ReadCloser, stderr io.ReadCloser) {
 	r.instance.StandardOutput = new(bytes.Buffer)
 	r.instance.StandardOutput.ReadFrom(stdout)
 
@@ -23,7 +23,7 @@ func (r Golang) initOutputBuffers(stdout io.ReadCloser, stderr io.ReadCloser) {
 }
 
 // Start the Cpp
-func (r Golang) Start() error {
+func (r Cpp) Start() error {
 	log.Info("we not implement this language")
 
 	return errors.New("Not yet implemented")
@@ -54,7 +54,7 @@ func (r Golang) Start() error {
 }
 
 // Wait until the runner finished and return data
-func (r Golang) Wait() (common.ResultData, error) {
+func (r Cpp) Wait() (common.ResultData, error) {
 	log.Info("we not implement this language")
 
 	return common.ResultData{}, errors.New("Not yet implemented")
@@ -73,6 +73,6 @@ func (r Golang) Wait() (common.ResultData, error) {
 }
 
 // IsRunning check runner running or not
-func (r Golang) IsRunning() bool {
+func (r Cpp) IsRunning() bool {
 	return false
 }

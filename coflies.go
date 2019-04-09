@@ -2,9 +2,6 @@ package main
 
 import (
 	"github.com/coflies/coflies/cmd"
-
-	common "github.com/coflies/coflies/common"
-	"github.com/coflies/coflies/runners"
 )
 
 func main() {
@@ -55,10 +52,3 @@ func main() {
 // 	fmt.Println(`Code Sandbox CLI Runner
 // 	Usage: coflies`)
 // }
-
-// MakeRunner Base on configuration return a specific runner
-func MakeRunner(conf common.Configuration) (common.Runner, error) {
-	// TODO configuration embedded into runner when initialization
-	// TODO create runner base on conf.Lang
-	return new(runners.Golang), nil
-}
