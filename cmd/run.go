@@ -24,8 +24,8 @@ var runCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// Info - only print when debugging/development
 		if viper.GetBool("development") {
-			fmt.Println("Language: ", viper.GetString("language"))
-			fmt.Println("Version: ", viper.GetString("version"))
+			fmt.Println("Language: ", language)
+			fmt.Println("Version: ", version)
 
 			fmt.Println("checking and verify system compabilities...")
 			fmt.Println("- verify os and arch information...")
