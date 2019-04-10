@@ -10,7 +10,7 @@ import (
 )
 
 type Golang struct {
-	instance common.Runner
+	instance *common.Runner
 	// many more
 }
 

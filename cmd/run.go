@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"fmt"
 	"os/exec"
 	"strconv"
 
 	"github.com/coflies/coflies/common"
 	"github.com/coflies/coflies/runners"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
 	"github.com/matishsiao/goInfo"
@@ -28,39 +28,40 @@ var runCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// Info - only print when debugging/development
 		if viper.GetBool("development") {
-			fmt.Println("Language: ", language)
-			fmt.Println("Version: ", version)
+			log.Info("Language: ", language)
+			log.Info("Version: ", version)
 
-			fmt.Println("1. checking and verify system compabilities...")
-			fmt.Println("  - verify os and arch information...")
+			log.Info("1. checking and verify system compabilities...")
+			log.Info("  - verify os and arch information...")
 			gi := goInfo.GetInfo()
-			fmt.Println("    OS: " + gi.GoOS + ", Platform: " + gi.Platform + ", CPUs: " + strconv.Itoa(gi.CPUs))
-
-			fmt.Println("  - initialize the runner for os and language")
+			log.Info("    OS: " + gi.GoOS + ", Platform: " + gi.Platform + ", CPUs: " + strconv.Itoa(gi.CPUs))
+			log.Info("  - initialize the runner for os and language")
+			//
+			langData := common.MakeLanguage("/home/tntvu/.coflies", language, version)
 			config := common.Configuration{
-				Lang:           common.LanguageData{Name: language, Version: version},
+				Lang:           langData,
 				Project:        common.ProjectData{},
 				Implementation: common.CodeData{},
 				Testing:        common.CodeData{},
 				TestData:       common.TestData{},
 			}
 			codeRunner, _ := runners.MakeRunner(config.Lang)
-			fmt.Println("  - preparing language framework IF neccessary...")
-			fmt.Println("    -- download if not existed")
-			fmt.Println("        download: " + config.Lang.DownloadLink(gi.GoOS, gi.Platform, "tar.gz"))
-			fmt.Println("      --- extract if downloaded")
-			fmt.Println("      --- configure language")
-			fmt.Println("  - preparing workspace ")
-			fmt.Println("    -- create folders IF neccessary")                                                      // design adaptable/extendable folders structure for all languages we will support
-			fmt.Println("    -- download/extract/copy necessary 3rds IF neccessary")                                // TODO
-			fmt.Println("    -- create/copy/move project files, test files, data files into folders IF neccessary") // should reuse frameworks of old codewars
-			fmt.Println("2. create/copy/move code files folders")                                                   // generate code files based on submission - old? or let user submit full source file
-			fmt.Println("3. run code files")                                                                        // multiple threads? async mode?
+			// log.Info("  - *(optional - not in priority) preparing language framework IF neccessary...")
+			// log.Info("    -- download if not existed")
+			// log.Info("        download: " + config.Lang.DownloadLink(gi.GoOS, gi.Platform, "tar.gz"))
+			// log.Info("      --- extract if downloaded")
+			// log.Info("      --- configure language")
+			log.Info("  - preparing workspace ")
+			log.Info("    -- create folders IF neccessary")                                                      // design adaptable/extendable folders structure for all languages we will support
+			log.Info("    -- download/extract/copy necessary 3rds IF neccessary")                                // TODO
+			log.Info("    -- create/copy/move project files, test files, data files into folders IF neccessary") // should reuse frameworks of old codewars
+			log.Info("2. create/copy/move code files folders")                                                   // generate code files based on submission - old? or let user submit full source file
+			log.Info("3. run code files")                                                                        // multiple threads? async mode?
 			codeRunner.Start()
-			fmt.Println("4. received and parse results") // multiple threads? async mode?
+			log.Info("4. received and parse results") // multiple threads? async mode?
 			results, _ := codeRunner.Wait()
-			fmt.Println("5. print out results") // multiple threads? async mode?
-			fmt.Println(results)
+			log.Info("5. print out results") // multiple threads? async mode?
+			log.Info(results)
 		}
 	},
 }

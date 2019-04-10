@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	homedir "github.com/mitchellh/go-homedir"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -29,7 +29,7 @@ var runnerCmd = &cobra.Command{
 
 func Execute() {
 	if err := runnerCmd.Execute(); err != nil {
-		fmt.Println(err)
+		log.Fatalf("%v", err)
 		os.Exit(1)
 	}
 }
@@ -54,7 +54,7 @@ func initConfig() {
 	} else {
 		home, err := homedir.Dir()
 		if err != nil {
-			fmt.Println(err)
+			log.Fatalf("%v", err)
 			os.Exit(1)
 		}
 		viper.AddConfigPath(home + "/.coflies")
@@ -63,7 +63,7 @@ func initConfig() {
 	viper.AutomaticEnv()
 	if err := viper.ReadInConfig(); err == nil {
 		if viper.GetBool("development") {
-			fmt.Println("Using config file: ", viper.ConfigFileUsed())
+			log.Infof("Using config file: %s", viper.ConfigFileUsed())
 		}
 	}
 }

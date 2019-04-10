@@ -1,11 +1,18 @@
 package common
 
-type LanguageType int
+import (
+	"io/ioutil"
+
+	log "github.com/sirupsen/logrus"
+	yaml "gopkg.in/yaml.v2"
+)
+
+type LanguageType string
 
 // Language Type
 const (
-	COMPILER    LanguageType = iota
-	INTERPRETER LanguageType = iota
+	COMPILER    LanguageType = "compiler"
+	INTERPRETER LanguageType = "interpreter"
 )
 
 // LanguageData ...
@@ -19,7 +26,7 @@ type LanguageData struct {
 	// Execution name of exec binary. Ex: java
 	ExecName string
 	// Compile name of compile binary. Ex: javac
-	CompilerName string
+	CompilerName string `yaml:"compiler-name"`
 	// Type: compiler (need compile then run) | interpreter (don't need compile)
 	Type LanguageType
 }
@@ -49,4 +56,24 @@ type CodeData struct{}
 type TestData struct{}
 
 // ResultData store result of the coflies project
-type ResultData struct{}
+type ResultData struct {
+	Stdout string
+	Stderr string
+}
+
+func MakeLanguage(projectPath string, name string, version string) LanguageData {
+	yamlFile, err := ioutil.ReadFile(projectPath + "/config/" + name + "/" + version + "/language.yaml")
+	if err != nil {
+		// error
+		yamlFile, _ = ioutil.ReadFile("projects/" + name + "/" + version + "/language.yaml")
+	}
+	l := LanguageData{
+		Name:    name,
+		Version: version,
+	}
+	err = yaml.Unmarshal(yamlFile, &l)
+	if err != nil {
+		log.Fatalf("Unmarshal: %v", err)
+	}
+	return l
+}

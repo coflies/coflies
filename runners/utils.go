@@ -24,14 +24,14 @@ func WireOutput(cmd *exec.Cmd) (io.ReadCloser, io.ReadCloser, error) {
 func MakeRunner(lang common.LanguageData) (common.Runable, error) {
 	switch lang.Name {
 	case "cpp":
-		return Cpp{
-			instance: common.Runner{
+		return cpp{
+			instance: &common.Runner{
 				Lang: lang,
 			},
 		}, nil
 	case "go":
 		return Golang{
-			instance: common.Runner{
+			instance: &common.Runner{
 				Lang: lang,
 			},
 		}, nil

@@ -2,9 +2,15 @@ package main
 
 import (
 	"github.com/coflies/coflies/cmd"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
+	log.SetFormatter(&log.TextFormatter{
+		DisableColors: false,
+		FullTimestamp: true,
+	})
+
 	cmd.Execute()
 	// TODO additional HTTP server instead of cmd mode
 	// // TODO use https/2 receive/return output
@@ -40,15 +46,15 @@ func main() {
 	// result, err := runner.Wait()
 	// if err != nil {
 	// 	log.Fatal(err)
-	// 	fmt.Println("Runner error. Details: ", err.Error())
+	// 	log.Info("Runner error. Details: ", err.Error())
 	// 	return
 	// }
 
 	// hahaha
-	// fmt.Println(result)
+	// log.Info(result)
 }
 
 // func printUsage() {
-// 	fmt.Println(`Code Sandbox CLI Runner
+// 	log.Info(`Code Sandbox CLI Runner
 // 	Usage: coflies`)
 // }
