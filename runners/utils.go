@@ -22,20 +22,17 @@ func WireOutput(cmd *exec.Cmd) (io.ReadCloser, io.ReadCloser, error) {
 }
 
 func MakeRunner(lang common.LanguageData) (common.Runable, error) {
+	instance := &common.Runner{
+		Lang: lang,
+	}
 	switch lang.Name {
 	case "cpp":
-		return cpp{
-			instance: &common.Runner{
-				Lang: lang,
-			},
-		}, nil
+		return cpp{instance: instance}, nil
 	case "go":
-		return Golang{
-			instance: &common.Runner{
-				Lang: lang,
-			},
-		}, nil
+		return Golang{instance: instance}, nil
+	case "c":
+		return c{instance: instance}, nil
 	default:
-		return nil, errors.New("Language not supported")
+		return nil, errors.New("language runner not implemented\nplease contact developer for more information")
 	}
 }

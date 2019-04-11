@@ -43,11 +43,16 @@ var runCmd = &cobra.Command{
 				log.Fatal(err)
 				os.Exit(1)
 			}
+			log.Info("  - preparing workspace ")
+			log.Info("    -- create folders IF neccessary") // design adaptable/extendable folders structure for all languages we will support
 			projectData, err := common.MakeProject("/home/tntvu/.coflies", language)
 			if err != nil {
 				log.Fatal(err)
 				os.Exit(1)
 			}
+			log.Info("    -- download/extract/copy necessary 3rds IF neccessary")                                // TODO
+			log.Info("    -- create/copy/move project files, test files, data files into folders IF neccessary") // should reuse frameworks of old codewars
+			log.Info("2. create/copy/move code files folders")                                                   // generate code files based on submission - old? or let user submit full source file
 			config := common.Configuration{
 				Lang:           langData,
 				Project:        projectData,
@@ -55,18 +60,12 @@ var runCmd = &cobra.Command{
 				Testing:        common.CodeData{},
 				TestData:       common.TestData{},
 			}
-			codeRunner, _ := runners.MakeRunner(config.Lang)
-			// log.Info("  - *(optional - not in priority) preparing language framework IF neccessary...")
-			// log.Info("    -- download if not existed")
-			// log.Info("        download: " + config.Lang.DownloadLink(gi.GoOS, gi.Platform, "tar.gz"))
-			// log.Info("      --- extract if downloaded")
-			// log.Info("      --- configure language")
-			log.Info("  - preparing workspace ")
-			log.Info("    -- create folders IF neccessary")                                                      // design adaptable/extendable folders structure for all languages we will support
-			log.Info("    -- download/extract/copy necessary 3rds IF neccessary")                                // TODO
-			log.Info("    -- create/copy/move project files, test files, data files into folders IF neccessary") // should reuse frameworks of old codewars
-			log.Info("2. create/copy/move code files folders")                                                   // generate code files based on submission - old? or let user submit full source file
-			log.Info("3. run code files")                                                                        // multiple threads? async mode?
+			codeRunner, err := runners.MakeRunner(config.Lang)
+			if err != nil {
+				log.Fatal(err)
+				os.Exit(1)
+			}
+			log.Info("3. run code files") // multiple threads? async mode?
 			codeRunner.Start()
 			log.Info("4. received and parse results") // multiple threads? async mode?
 			results, _ := codeRunner.Wait()
