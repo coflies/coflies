@@ -11,7 +11,7 @@ type cpp struct {
 	// many more for c++ specific
 }
 
-// Start the Cpp
+// Start the runner
 func (r cpp) Start() error {
 	log.Info("Starting the " + r.instance.Lang.Name + " runner")
 	r.args = []string{}

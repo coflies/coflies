@@ -11,6 +11,7 @@ type golang struct {
 	// many more for golang specific
 }
 
+// Start the runner
 func (r golang) Start() error {
 	log.Info("Starting the " + r.instance.Lang.Name + " runner")
 	r.args = []string{}

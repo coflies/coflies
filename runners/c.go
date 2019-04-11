@@ -1,9 +1,6 @@
 package runners
 
 import (
-	"bytes"
-	"io"
-
 	"github.com/coflies/coflies/common"
 	log "github.com/sirupsen/logrus"
 )
@@ -14,15 +11,7 @@ type c struct {
 	// many more for c - specific
 }
 
-func (r *c) initOutputBuffers(stdout io.ReadCloser, stderr io.ReadCloser) {
-	r.instance.StandardOutput = new(bytes.Buffer)
-	r.instance.StandardOutput.ReadFrom(stdout)
-
-	r.instance.ErrorOutput = new(bytes.Buffer)
-	r.instance.ErrorOutput.ReadFrom(stderr)
-}
-
-// Start the Cpp
+// Start the runner
 func (r c) Start() error {
 	log.Info("Starting the " + r.instance.Lang.Name + " runner")
 	r.args = []string{}
