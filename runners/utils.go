@@ -2,25 +2,13 @@ package runners
 
 import (
 	"errors"
-	"io"
-	"os/exec"
 
 	common "github.com/coflies/coflies/common"
 )
 
-func WireOutput(cmd *exec.Cmd) (io.ReadCloser, io.ReadCloser, error) {
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return nil, nil, err
-	}
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return stdout, stderr, nil
-}
-
+// MakeRunner create wrapper type for common Runner instance
+//            this is useful when we need add more logic into
+//            specific language
 func MakeRunner(lang common.LanguageData) (common.Runable, error) {
 	instance := &common.Runner{
 		Lang: lang,
@@ -29,7 +17,7 @@ func MakeRunner(lang common.LanguageData) (common.Runable, error) {
 	case "cpp":
 		return cpp{instance: instance}, nil
 	case "go":
-		return Golang{instance: instance}, nil
+		return golang{instance: instance}, nil
 	case "c":
 		return c{instance: instance}, nil
 	default:
