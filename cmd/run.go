@@ -60,7 +60,7 @@ var runCmd = &cobra.Command{
 				Testing:        common.CodeData{},
 				TestData:       common.TestData{},
 			}
-			codeRunner, err := runners.MakeRunner(config.Lang)
+			codeRunner, err := runners.MakeRunner(config)
 			if err != nil {
 				log.Fatal(err)
 				os.Exit(1)

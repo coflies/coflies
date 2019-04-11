@@ -1,0 +1,9 @@
+compiler-name: go
+compile-args:
+- build
+- coflies_impl.go
+- -o
+- coflies
+version-arg: version
+type: compiler
+exec: coflies

@@ -9,11 +9,12 @@ import (
 // MakeRunner create wrapper type for common Runner instance
 //            this is useful when we need add more logic into
 //            specific language
-func MakeRunner(lang common.LanguageData) (common.Runable, error) {
+func MakeRunner(config common.Configuration) (common.Runable, error) {
 	instance := &common.Runner{
-		Lang: lang,
+		Lang:    config.Lang,
+		Project: config.Project,
 	}
-	switch lang.Name {
+	switch config.Lang.Name {
 	case "cpp":
 		return cpp{instance: instance}, nil
 	case "go":

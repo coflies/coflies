@@ -1,3 +1,7 @@
 compiler-name: clang
+version-arg: --version
+compile-args:
+- -o
+- coflies
 type: compiler
 exec: coflies

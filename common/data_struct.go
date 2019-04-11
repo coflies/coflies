@@ -29,9 +29,13 @@ type LanguageData struct {
 	// relative directory install path
 	Path string
 	// Execution name of exec binary. Ex: java
-	ExecName string
+	Exec string
 	// Compile name of compile binary. Ex: javac
 	CompilerName string `yaml:"compiler-name"`
+	// Args when compile exec
+	CompileArgs []string `yaml:"compile-args"`
+	// Argument pass to compiler-name for checking version
+	VersionArg string `yaml:"version-arg"`
 	// Type: compiler (need compile then run) | interpreter (don't need compile)
 	Type LanguageType
 }
@@ -90,7 +94,7 @@ func MakeLanguage(projectPath string, name string, version string) (LanguageData
 	}
 	//
 	log.Info("Getting compiler version")
-	versionCmd := exec.Command(l.CompilerName, "--version")
+	versionCmd := exec.Command(l.CompilerName, l.VersionArg)
 	stdout, _ := versionCmd.StdoutPipe()
 	err = versionCmd.Start()
 	if err != nil {
@@ -124,10 +128,13 @@ func MakeProject(projectPath string, name string) (ProjectData, error) {
 		return ProjectData{}, fmt.Errorf("Project configuration invalid: %v", err)
 	}
 	//
-	_, err = exec.LookPath(projectPath + "/" + p.Workspace)
-	if err != nil {
+	if p.Workspace[0] != '/' {
+		p.Workspace = projectPath + "/" + p.Workspace
+	}
+	workingDir := p.Workspace
+	if _, err = os.Stat(workingDir); os.IsNotExist(err) {
 		log.Info("Working space not existed. Creating...")
-		err := os.MkdirAll(projectPath+"/"+p.Workspace, 0700)
+		err = os.MkdirAll(projectPath+"/"+p.Workspace, 0700)
 		if err != nil {
 			return ProjectData{}, fmt.Errorf("Workspace not existed. Error: %v", err)
 		}

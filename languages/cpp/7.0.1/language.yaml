@@ -1,2 +1,6 @@
 compiler-name: clang++
+compile-args:
+- -o
+- coflies
+version-arg: --version
 type: compiler

@@ -5,9 +5,10 @@ import (
 	"context"
 	"errors"
 	"io"
-	"log"
 	"os/exec"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // Runner The main entry point of the cmd
@@ -52,7 +53,32 @@ func (r *Runner) bindOutput(stdout io.ReadCloser, stderr io.ReadCloser) {
 func (r *Runner) Start(args []string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Millisecond)
 	defer cancel()
-	r.cmd = exec.CommandContext(ctx, r.Lang.CompilerName, args...)
+	if r.Lang.Type == "compiler" {
+		// we need compile first
+		compileCmd := exec.CommandContext(ctx, r.Lang.CompilerName, r.Lang.CompileArgs...)
+		compileCmd.Dir = r.Project.Workspace
+		stdout, err := compileCmd.StdoutPipe()
+		if err != nil {
+			log.Fatal(err)
+			return err
+		}
+		stderr, err := compileCmd.StderrPipe()
+		if err != nil {
+			log.Fatal(err)
+			return err
+		}
+		if err = compileCmd.Start(); err != nil {
+			log.Fatal(err)
+			return err
+		}
+
+		r.bindOutput(stdout, stderr)
+		if err = compileCmd.Wait(); err != nil {
+			return err
+		}
+	}
+
+	r.cmd = exec.CommandContext(ctx, r.Project.Workspace+"/"+r.Lang.Exec, args...)
 	r.cmd.Dir = r.Project.Workspace
 	stdout, stderr, err := r.wireOutput()
 	if err != nil {
