@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"os"
 	"os/exec"
 	"strconv"
 
@@ -37,10 +38,19 @@ var runCmd = &cobra.Command{
 			log.Info("    OS: " + gi.GoOS + ", Platform: " + gi.Platform + ", CPUs: " + strconv.Itoa(gi.CPUs))
 			log.Info("  - initialize the runner for os and language")
 			//
-			langData := common.MakeLanguage("/home/tntvu/.coflies", language, version)
+			langData, err := common.MakeLanguage("/home/tntvu/.coflies", language, version)
+			if err != nil {
+				log.Fatal(err)
+				os.Exit(1)
+			}
+			projectData, err := common.MakeProject("/home/tntvu/.coflies", language)
+			if err != nil {
+				log.Fatal(err)
+				os.Exit(1)
+			}
 			config := common.Configuration{
 				Lang:           langData,
-				Project:        common.ProjectData{},
+				Project:        projectData,
 				Implementation: common.CodeData{},
 				Testing:        common.CodeData{},
 				TestData:       common.TestData{},

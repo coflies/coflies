@@ -37,9 +37,11 @@ func (r cpp) Start() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Millisecond)
 	defer cancel()
 
-	r.args = []string{"--version"}
+	r.args = []string{}
 	args := append(r.args, r.instance.Project.Args...)
+	log.Info(r.instance.Lang.CompilerName)
 	r.instance.Cmd = exec.CommandContext(ctx, r.instance.Lang.CompilerName, args...)
+	r.instance.Cmd.Dir = r.instance.Project.Workspace
 	stdout, stderr, err := WireOutput(r.instance.Cmd)
 	if err != nil {
 		log.Fatal(err)
@@ -60,12 +62,13 @@ func (r cpp) Start() error {
 func (r cpp) Wait() (common.ResultData, error) {
 	//
 	if r.instance.Cmd == nil {
-		return common.ResultData{}, errors.New("The command is not existed")
+		return common.ResultData{}, errors.New("Runner stopped.")
 	}
 
 	if err := r.instance.Cmd.Wait(); err != nil {
-		log.Fatalf("Error waiting command. %v", err)
-		return common.ResultData{}, err
+		return common.ResultData{
+			Stderr: r.instance.ErrorOutput.String(),
+		}, err
 	}
 
 	// TODO resultHandler for parsing/beauty/validate output

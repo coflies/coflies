@@ -1,0 +1,3 @@
+compiler-name: clang
+type: compiler
+exec: coflies

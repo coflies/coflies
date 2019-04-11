@@ -16,11 +16,10 @@ func (l *LanguageData) DownloadLink(os string, arch string, ext string) string {
 }
 
 func (l *LanguageData) SupportedVersion() ([]string, error) {
-	//
+	// usually we don't support installation - user should download and install by themselves
 	switch l.Name {
-	// usually we don't support c/cpp installation - user should download and install by themselves
-	case "cpp":
-		return []string{"8.2.0"}, nil
+	case "cpp", "c":
+		return []string{"7.0.1"}, nil
 	case "go":
 		return []string{"1.12.1"}, nil
 	default:

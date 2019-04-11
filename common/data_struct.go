@@ -1,7 +1,12 @@
 package common
 
 import (
+	"bytes"
+	"fmt"
 	"io/ioutil"
+	"os"
+	"os/exec"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 	yaml "gopkg.in/yaml.v2"
@@ -61,11 +66,14 @@ type ResultData struct {
 	Stderr string
 }
 
-func MakeLanguage(projectPath string, name string, version string) LanguageData {
+func MakeLanguage(projectPath string, name string, version string) (LanguageData, error) {
 	yamlFile, err := ioutil.ReadFile(projectPath + "/config/" + name + "/" + version + "/language.yaml")
 	if err != nil {
-		// error
-		yamlFile, _ = ioutil.ReadFile("projects/" + name + "/" + version + "/language.yaml")
+		log.Errorf("Can't find language configuration. Error: %v\nRetry using default location...", err)
+		yamlFile, err = ioutil.ReadFile("languages/" + name + "/" + version + "/language.yaml")
+	}
+	if err != nil {
+		return LanguageData{}, fmt.Errorf("Language or Version not supported. Error: %v", err)
 	}
 	l := LanguageData{
 		Name:    name,
@@ -73,7 +81,57 @@ func MakeLanguage(projectPath string, name string, version string) LanguageData 
 	}
 	err = yaml.Unmarshal(yamlFile, &l)
 	if err != nil {
-		log.Fatalf("Unmarshal: %v", err)
+		return LanguageData{}, fmt.Errorf("Incorrected language configuration: %v", err)
 	}
-	return l
+	//
+	_, err = exec.LookPath(l.CompilerName)
+	if err != nil {
+		return LanguageData{}, fmt.Errorf("Language compiler not installed. %v", err)
+	}
+	//
+	log.Info("Getting compiler version")
+	versionCmd := exec.Command(l.CompilerName, "--version")
+	stdout, _ := versionCmd.StdoutPipe()
+	err = versionCmd.Start()
+	if err != nil {
+		return LanguageData{}, fmt.Errorf("Error getting compiler version. %v", err)
+	}
+	buffer := new(bytes.Buffer)
+	buffer.ReadFrom(stdout)
+
+	versionCmd.Wait()
+	versionStr := buffer.String()
+
+	if !strings.Contains(versionStr, l.Version) {
+		return LanguageData{}, fmt.Errorf("Version not match. Please install %s-%s", l.CompilerName, l.Version)
+	}
+
+	return l, nil
+}
+
+func MakeProject(projectPath string, name string) (ProjectData, error) {
+	yamlFile, err := ioutil.ReadFile(projectPath + "/projects/" + name + "/project-data.yaml")
+	if err != nil {
+		log.Errorf("Can't find project configuration. Error: %v\nRetry using default location...", err)
+		yamlFile, err = ioutil.ReadFile("projects/" + name + "/project-data.yaml")
+	}
+	if err != nil {
+		return ProjectData{}, fmt.Errorf("Error: %v", err)
+	}
+	p := ProjectData{}
+	err = yaml.Unmarshal(yamlFile, &p)
+	if err != nil {
+		return ProjectData{}, fmt.Errorf("Project configuration invalid: %v", err)
+	}
+	//
+	_, err = exec.LookPath(projectPath + "/" + p.Workspace)
+	if err != nil {
+		log.Info("Working space not existed. Creating...")
+		err := os.MkdirAll(projectPath+"/"+p.Workspace, 0700)
+		if err != nil {
+			return ProjectData{}, fmt.Errorf("Workspace not existed. Error: %v", err)
+		}
+	}
+
+	return p, nil
 }
