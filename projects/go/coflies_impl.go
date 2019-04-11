@@ -1,7 +1,9 @@
 package coflies
 
-func main() {
+import "fmt"
 
+func main() {
+	fmt.Println("Hello, world!")
 }
 
 // TODO this file will be generate by GolangProject using implementation's CodeData

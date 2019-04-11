@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"os/exec"
 	"time"
@@ -50,34 +51,46 @@ func (r *Runner) bindOutput(stdout io.ReadCloser, stderr io.ReadCloser) {
 	r.ErrorOutput.ReadFrom(stderr)
 }
 
-func (r *Runner) Start(args []string) error {
+func compileSource(r Runner) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Millisecond)
 	defer cancel()
-	if r.Lang.Type == "compiler" {
-		// we need compile first
-		compileCmd := exec.CommandContext(ctx, r.Lang.CompilerName, r.Lang.CompileArgs...)
-		compileCmd.Dir = r.Project.Workspace
-		stdout, err := compileCmd.StdoutPipe()
-		if err != nil {
-			log.Fatal(err)
-			return err
-		}
-		stderr, err := compileCmd.StderrPipe()
-		if err != nil {
-			log.Fatal(err)
-			return err
-		}
-		if err = compileCmd.Start(); err != nil {
-			log.Fatal(err)
-			return err
-		}
 
-		r.bindOutput(stdout, stderr)
-		if err = compileCmd.Wait(); err != nil {
+	log.Infof("%v", r.Lang.CompileArgs)
+	compileCmd := exec.CommandContext(ctx, r.Lang.CompilerName, r.Lang.CompileArgs...)
+	compileCmd.Dir = r.Project.Workspace
+	stdout, err := compileCmd.StdoutPipe()
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	stderr, err := compileCmd.StderrPipe()
+	if err != nil {
+		return fmt.Errorf("compile result: %s", r.ErrorOutput.String())
+	}
+	if err = compileCmd.Start(); err != nil {
+		return fmt.Errorf("compile result: %s", r.ErrorOutput.String())
+	}
+
+	r.bindOutput(stdout, stderr)
+	if err = compileCmd.Wait(); err != nil {
+		return fmt.Errorf("compile result: %s", r.ErrorOutput.String())
+	}
+
+	log.Infof("compile result: %s", r.StandardOutput.String())
+	return nil
+}
+
+func (r *Runner) Start(args []string) error {
+	if r.Lang.Type == "compiler" {
+		log.Infof("compiling code before run...")
+		// we need compile first
+		if err := compileSource(*r); err != nil {
 			return err
 		}
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Millisecond)
+	defer cancel()
 	r.cmd = exec.CommandContext(ctx, r.Project.Workspace+"/"+r.Lang.Exec, args...)
 	r.cmd.Dir = r.Project.Workspace
 	stdout, stderr, err := r.wireOutput()
@@ -99,7 +112,7 @@ func (r *Runner) Start(args []string) error {
 func (r *Runner) Wait() (ResultData, error) {
 	//
 	if r.cmd == nil {
-		return ResultData{}, errors.New("Runner stopped.")
+		return ResultData{}, errors.New("runner stopped")
 	}
 
 	if err := r.cmd.Wait(); err != nil {

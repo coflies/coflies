@@ -45,7 +45,7 @@ var runCmd = &cobra.Command{
 			}
 			log.Info("  - preparing workspace ")
 			log.Info("    -- create folders IF neccessary") // design adaptable/extendable folders structure for all languages we will support
-			projectData, err := common.MakeProject("/home/tntvu/.coflies", language)
+			projectData, err := common.MakeProject("/home/tntvu/repo", language)
 			if err != nil {
 				log.Fatal(err)
 				os.Exit(1)
@@ -66,9 +66,16 @@ var runCmd = &cobra.Command{
 				os.Exit(1)
 			}
 			log.Info("3. run code files") // multiple threads? async mode?
-			codeRunner.Start()
+			if err = codeRunner.Start(); err != nil {
+				log.Fatal(err)
+				os.Exit(1)
+			}
 			log.Info("4. received and parse results") // multiple threads? async mode?
-			results, _ := codeRunner.Wait()
+			results, err := codeRunner.Wait()
+			if err != nil {
+				log.Fatal(err)
+				os.Exit(1)
+			}
 			log.Info("5. print out results") // multiple threads? async mode?
 			log.Info(results)
 		}

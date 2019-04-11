@@ -14,7 +14,15 @@ type golang struct {
 // Start the runner
 func (r golang) Start() error {
 	log.Info("Starting the " + r.instance.Lang.Name + " runner")
-	r.args = []string{}
+
+	// copy/generate source file
+	// testing
+	err := CopyFileContents("projects/"+r.instance.Lang.Name+"/coflies_impl.go", r.instance.Project.Workspace+"/coflies.go")
+	if err != nil {
+		log.Fatalf("error generate code file - %v", err)
+		return err
+	}
+
 	args := append(r.args, r.instance.Project.Args...)
 	return r.instance.Start(args)
 }
